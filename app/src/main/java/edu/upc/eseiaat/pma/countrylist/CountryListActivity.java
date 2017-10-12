@@ -1,5 +1,7 @@
 package edu.upc.eseiaat.pma.countrylist;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +40,27 @@ public class CountryListActivity extends AppCompatActivity {
                         String.format("Has ecogido %s", country_list.get(position)),
                         Toast.LENGTH_SHORT
                 ).show();
+            }
+        });
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CountryListActivity.this);
+                builder.setTitle(R.string.Confirmation);
+                String message = getResources().getString(R.string.confirm_message);
+                builder.setMessage(message + country_list.get(position) + "?");
+                builder.setPositiveButton(R.string.erase, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        country_list.remove(position);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, null);
+                builder.create().show();
+
+                return true;
             }
         });
     }
